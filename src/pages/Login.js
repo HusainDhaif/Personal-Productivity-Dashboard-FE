@@ -17,10 +17,15 @@ function Login() {
 
     try {
       const response = await login(username, password);
-      // Save token to localStorage (will be handled in auth protection step)
-      if (response.token) {
-        localStorage.setItem('token', response.token);
+      const token = response.access_token || response.token;
+
+      if (token) {
+        localStorage.setItem('token', token);
+      } else {
+        setError('No token returned. Please try again.');
+        return;
       }
+
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');

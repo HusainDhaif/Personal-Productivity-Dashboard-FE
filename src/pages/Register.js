@@ -16,7 +16,6 @@ function Register() {
     e.preventDefault();
     setError('');
 
-    // Validate passwords match
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -25,12 +24,8 @@ function Register() {
     setLoading(true);
 
     try {
-      const response = await registerUser(username, email, password);
-      // Save token to localStorage if provided
-      if (response.token) {
-        localStorage.setItem('token', response.token);
-      }
-      navigate('/dashboard');
+      await registerUser(username, email, password);
+      navigate('/login');
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {
