@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 function Navbar() {
+  const navigate = useNavigate();
+
   const handleLogout = () => {
-    // Logout logic will be added later
-    console.log('Logout clicked');
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   return (
@@ -14,6 +16,9 @@ function Navbar() {
       </div>
       <div className="navbar-links">
         <Link to="/dashboard">Dashboard</Link>
+        <Link to="/tasks">Tasks</Link>
+        <Link to="/notes">Notes</Link>
+        <Link to="/habits">Habits</Link>
         <button onClick={handleLogout} className="logout-btn">
           Logout
         </button>

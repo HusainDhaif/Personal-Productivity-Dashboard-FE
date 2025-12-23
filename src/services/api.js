@@ -1,14 +1,20 @@
-// API base URL - update this to match your backend URL
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = 'http://127.0.0.1:8000';
 
-// Helper function to make API calls
 async function apiCall(endpoint, method = 'GET', data = null) {
   const url = `${API_BASE_URL}${endpoint}`;
+
+  const token = localStorage.getItem('token');
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const options = {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
   };
 
   if (data) {
@@ -19,7 +25,7 @@ async function apiCall(endpoint, method = 'GET', data = null) {
   const result = await response.json();
 
   if (!response.ok) {
-    throw new Error(result.message || 'Something went wrong');
+    throw new Error(result.detail || result.message || 'Something went wrong');
   }
 
   return result;
