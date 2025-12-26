@@ -1,8 +1,8 @@
 import apiCall from './api';
 
-export const login = async (username, password) => {
+export const login = async (email, password) => {
   return apiCall('/auth/login', 'POST', {
-    username,
+    email,
     password,
   });
 };

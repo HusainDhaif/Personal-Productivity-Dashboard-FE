@@ -13,10 +13,13 @@ function Notes() {
     const fetchNotes = async () => {
       setLoading(true);
       setError('');
+      
       try {
         const data = await apiCall('/notes', 'GET');
+        console.log('Notes fetched:', data);
         setNotes(data || []);
       } catch (err) {
+        console.error('Error fetching notes:', err);
         setError(err.message || 'Could not load notes.');
       } finally {
         setLoading(false);
@@ -27,10 +30,16 @@ function Notes() {
   }, []);
 
   const handleDelete = async (noteId) => {
+    if (!window.confirm('Are you sure you want to delete this note?')) {
+      return;
+    }
+
     try {
       await apiCall(`/notes/${noteId}`, 'DELETE');
+      console.log('Note deleted:', noteId);
       setNotes((prev) => prev.filter((note) => note.id !== noteId));
     } catch (err) {
+      console.error('Error deleting note:', err);
       setError(err.message || 'Could not delete note.');
     }
   };
@@ -51,7 +60,7 @@ function Notes() {
         {loading ? (
           <p>Loading notes...</p>
         ) : notes.length === 0 ? (
-          <p>No notes found.</p>
+          <p>No notes found. Create your first note!</p>
         ) : (
           <ul className="notes-list">
             {notes.map((note) => (

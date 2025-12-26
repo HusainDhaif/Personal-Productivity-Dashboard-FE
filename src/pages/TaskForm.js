@@ -17,13 +17,17 @@ function TaskForm() {
   useEffect(() => {
     const loadTask = async () => {
       if (!isEditing) return;
+      
       setLoading(true);
       setError('');
+      
       try {
         const data = await apiCall(`/tasks/${id}`, 'GET');
+        console.log('Task loaded for editing:', data);
         setTitle(data.title || '');
         setDescription(data.description || '');
       } catch (err) {
+        console.error('Error loading task:', err);
         setError(err.message || 'Could not load task.');
       } finally {
         setLoading(false);
@@ -41,11 +45,15 @@ function TaskForm() {
     try {
       if (isEditing) {
         await apiCall(`/tasks/${id}`, 'PUT', { title, description });
+        console.log('Task updated:', id);
       } else {
         await apiCall('/tasks', 'POST', { title, description });
+        console.log('Task created successfully');
       }
-      navigate('/dashboard');
+      
+      navigate('/tasks');
     } catch (err) {
+      console.error('Error saving task:', err);
       setError(err.message || 'Could not save task.');
     } finally {
       setLoading(false);
@@ -57,9 +65,9 @@ function TaskForm() {
       <Navbar />
       <div className="taskform-container">
         <div className="taskform-header">
-          <h2>{isEditing ? 'Edit Task' : 'Add Task'}</h2>
-          <Link to="/dashboard" className="secondary-btn">
-            Back to Dashboard
+          <h2>{isEditing ? 'Edit Task' : 'Add New Task'}</h2>
+          <Link to="/tasks" className="secondary-btn">
+            Back to Tasks
           </Link>
         </div>
 

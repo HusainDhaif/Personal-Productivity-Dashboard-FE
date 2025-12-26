@@ -9,12 +9,14 @@ function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -24,9 +26,17 @@ function Register() {
     setLoading(true);
 
     try {
-      await registerUser(username, email, password);
-      navigate('/login');
+      const response = await registerUser(username, email, password);
+      console.log('Register Response:', response);
+      
+      setSuccess('Registration successful! Redirecting to login...');
+      console.log('Registration successful!');
+      
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
     } catch (err) {
+      console.error('Registration error:', err);
       setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
@@ -79,6 +89,7 @@ function Register() {
             />
           </div>
           {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
           <button type="submit" disabled={loading} className="submit-btn">
             {loading ? 'Registering...' : 'Register'}
           </button>

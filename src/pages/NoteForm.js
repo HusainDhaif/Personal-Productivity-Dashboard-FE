@@ -17,13 +17,17 @@ function NoteForm() {
   useEffect(() => {
     const loadNote = async () => {
       if (!isEditing) return;
+      
       setLoading(true);
       setError('');
+      
       try {
         const data = await apiCall(`/notes/${id}`, 'GET');
+        console.log('Note loaded for editing:', data);
         setTitle(data.title || '');
         setContent(data.content || '');
       } catch (err) {
+        console.error('Error loading note:', err);
         setError(err.message || 'Could not load note.');
       } finally {
         setLoading(false);
@@ -41,11 +45,15 @@ function NoteForm() {
     try {
       if (isEditing) {
         await apiCall(`/notes/${id}`, 'PUT', { title, content });
+        console.log('Note updated:', id);
       } else {
         await apiCall('/notes', 'POST', { title, content });
+        console.log('Note created successfully');
       }
+      
       navigate('/notes');
     } catch (err) {
+      console.error('Error saving note:', err);
       setError(err.message || 'Could not save note.');
     } finally {
       setLoading(false);
@@ -57,7 +65,7 @@ function NoteForm() {
       <Navbar />
       <div className="noteform-container">
         <div className="noteform-header">
-          <h2>{isEditing ? 'Edit Note' : 'Add Note'}</h2>
+          <h2>{isEditing ? 'Edit Note' : 'Add New Note'}</h2>
           <Link to="/notes" className="secondary-btn">
             Back to Notes
           </Link>
